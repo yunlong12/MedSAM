@@ -84,7 +84,7 @@ for gt_name in tqdm(names):
 # save all 2D images as one npz file: ori_imgs, ori_gts, img_embeddings
 # stack the list to array
 print('Num. of images:', len(imgs))
-if len(imgs) > 1:
+if len(imgs) >= 1:
     imgs = np.stack(imgs, axis=0)  # (n, 256, 256, 3)
     gts = np.stack(gts, axis=0)  # (n, 256, 256)
     img_embeddings = np.stack(img_embeddings, axis=0)  # (n, 1, 256, 64, 64)
