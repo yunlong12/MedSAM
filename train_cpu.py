@@ -109,7 +109,7 @@ sam_model = sam_model_registry[model_type](checkpoint=checkpoint).to(device)
 sam_model.train()
 # Set up the optimizer, hyperparameter tuning will improve performance here
 optimizer = torch.optim.Adam(sam_model.mask_decoder.parameters(), lr=1e-5, weight_decay=0)
-seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
+seg_loss = torch.nn.BCELoss(reduction="mean") #monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
 # %% train
 num_epochs = 100
@@ -145,7 +145,7 @@ for epoch in range(num_epochs):
             multimask_output=False,
         )
 
-        loss = seg_loss(mask_predictions, gt2D.to(device))
+        loss = seg_loss(torch.sigmoid(mask_predictions), gt2D.to(device).to(dtype=mask_predictions.dtype))
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
